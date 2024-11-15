@@ -1,11 +1,9 @@
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'dart:collection'; 
+import 'dart:collection';
 import 'package:http/http.dart' as http;
 
 import '../models/task_model.dart';
-
 
 class TaskProvider with ChangeNotifier {
   final _baseUrl = 'https://todolist-d6e53-default-rtdb.firebaseio.com/';
@@ -87,4 +85,45 @@ class TaskProvider with ChangeNotifier {
       rethrow;
     }
   }
+
+Future<void> completeTask(String taskId, bool isCompleted) async {
+  try {
+    final response = await http.patch(
+      Uri.parse('$_baseUrl/tasks/$taskId.json'),
+      body: jsonEncode({'isCompleted': isCompleted}),
+    );
+
+    if (response.statusCode == 200) {
+      final index = _tasks.indexWhere((task) => task.id == taskId);
+      if (index != -1) {
+        _tasks[index].isCompleted = isCompleted;
+        notifyListeners();
+      }
+    } else {
+      throw Exception('Failed to complete task');
+    }
+  } catch (error) {
+    rethrow;
+  }
+}
+//   Future<void> completeTask(Task task) async {
+//     try {
+//       final response = await http.patch(
+//         Uri.parse('$_baseUrl/tasks/${task.id}.json'),
+//         body: jsonEncode(task.toJson()),
+//       );
+
+//       if (response.statusCode == 200) {
+//         final index = _tasks.indexWhere((elem) => elem.id == task.id);
+//         if (index != -1) {
+//           _tasks[index] = task;
+//           notifyListeners();
+//         }
+//       } else {
+//         throw Exception('Failed to complete task');
+//       }
+//     } catch (error) {
+//       rethrow;
+//     }
+//   }
 }

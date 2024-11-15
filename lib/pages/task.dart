@@ -107,7 +107,8 @@ class _TaskState extends State<TaskForm> {
                 final DateTime? picked = await showDatePicker(
                   context: context,
                   initialDate: _dueDate ?? DateTime.now(),
-                  firstDate: DateTime.fromMillisecondsSinceEpoch(1641031200000), //coloquei esse pra simular atraso
+                  firstDate: DateTime.fromMillisecondsSinceEpoch(
+                      1641031200000), //coloquei esse pra simular atraso
                   lastDate: DateTime(2100),
                 );
                 if (picked != null && picked != _dueDate) {
@@ -192,9 +193,23 @@ class TaskTile extends StatelessWidget {
     final theme = Theme.of(context);
 
     return ListTile(
-      tileColor: task.dueDate.isAfter(DateTime.now())
+      tileColor: task.isCompleted
+      ? Colors.green.shade100
+      : task.dueDate.isAfter(DateTime.now())
           ? Colors.blue.shade100
-          : Colors.red.shade100, // ou se isCompleted == true, tile verde
+          : Colors.red.shade100,
+      leading: ElevatedButton( //botão check
+        onPressed: () async{
+          await Provider.of<TaskProvider>(context, listen: false)
+          .completeTask(task.id, !task.isCompleted);
+        },
+        style: ElevatedButton.styleFrom(
+            shape: const CircleBorder(),
+            padding: const EdgeInsets.all(15.0),
+            minimumSize: const Size(5, 5),
+            backgroundColor: theme.primaryColor),
+        child: const Icon(Icons.check, color: Colors.white),
+      ),
       title: Text(task.title),
       subtitle: Text(task.category),
       trailing: Row(

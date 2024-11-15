@@ -198,18 +198,22 @@ class TaskTile extends StatelessWidget {
       : task.dueDate.isAfter(DateTime.now())
           ? Colors.blue.shade100
           : Colors.red.shade100,
-      leading: ElevatedButton( //botão check
-        onPressed: () async{
-          await Provider.of<TaskProvider>(context, listen: false)
-          .completeTask(task.id, !task.isCompleted);
-        },
-        style: ElevatedButton.styleFrom(
-            shape: const CircleBorder(),
-            padding: const EdgeInsets.all(15.0),
-            minimumSize: const Size(5, 5),
-            backgroundColor: theme.primaryColor),
-        child: const Icon(Icons.check, color: Colors.white),
-      ),
+leading: Checkbox(
+  value: task.isCompleted,
+  onChanged: (bool? newValue) async {
+    await Provider.of<TaskProvider>(context, listen: false)
+        .completeTask(task.id, newValue ?? false);
+  },
+  shape: const CircleBorder(),
+  checkColor: Colors.white,
+  fillColor: WidgetStateProperty.resolveWith((states) {
+    if (states.contains(WidgetState.selected)) {
+      return theme.primaryColor; // Cor do checkbox selecionado
+    }
+    return Colors.purple.shade200; // Cor do checkbox não selecionado
+  }),
+),
+
       title: Text(task.title),
       subtitle: Text(task.category),
       trailing: Row(

@@ -108,7 +108,7 @@ class _TaskState extends State<TaskForm> {
                   context: context,
                   initialDate: _dueDate ?? DateTime.now(),
                   firstDate: DateTime.fromMillisecondsSinceEpoch(
-                      1641031200000), //coloquei esse pra simular atraso
+                      1641031200000),
                   lastDate: DateTime(2100),
                 );
                 if (picked != null && picked != _dueDate) {
@@ -208,9 +208,9 @@ leading: Checkbox(
   checkColor: Colors.white,
   fillColor: WidgetStateProperty.resolveWith((states) {
     if (states.contains(WidgetState.selected)) {
-      return theme.primaryColor; // Cor do checkbox selecionado
+      return theme.primaryColor; 
     }
-    return Colors.purple.shade200; // Cor do checkbox não selecionado
+    return Colors.purple; 
   }),
 ),
 
